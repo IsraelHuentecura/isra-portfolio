@@ -18,6 +18,9 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
     <title>{title}</title>
   </head>
   <body class="bg-warm grain">
+    <!-- Custom cursor -->
+    <div id="cursor-dot" class="cursor-dot hidden md:block"></div>
+
     <slot />
 
     <script>
@@ -163,6 +166,71 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
           },
         })
       }
+
+      // ── Custom cursor follow ──
+      const cursorDot = document.getElementById('cursor-dot')
+      if (cursorDot && window.matchMedia('(pointer: fine)').matches) {
+        let cx = 0, cy = 0
+        document.addEventListener('mousemove', (e) => {
+          cx = e.clientX
+          cy = e.clientY
+        })
+        gsap.ticker.add(() => {
+          gsap.set(cursorDot, { x: cx, y: cy })
+        })
+
+        // Hover states — grow on interactive elements
+        document.querySelectorAll('a, button, .ship-pill, .card-lift').forEach((el) => {
+          el.addEventListener('mouseenter', () => cursorDot.classList.add('cursor-hover'))
+          el.addEventListener('mouseleave', () => cursorDot.classList.remove('cursor-hover'))
+        })
+      }
+
+      // ── Magnetic buttons ──
+      document.querySelectorAll('.btn-glow').forEach((btn) => {
+        const el = btn as HTMLElement
+        el.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = el.getBoundingClientRect()
+          const x = e.clientX - rect.left - rect.width / 2
+          const y = e.clientY - rect.top - rect.height / 2
+          gsap.to(el, { x: x * 0.2, y: y * 0.2, duration: 0.3, ease: 'power2.out' })
+        })
+        el.addEventListener('mouseleave', () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+        })
+      })
+
+      // ── Text mask reveals ──
+      gsap.utils.toArray('.text-mask-inner').forEach((el) => {
+        gsap.to(el as HTMLElement, {
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: (el as HTMLElement).parentElement,
+            start: 'top 85%',
+            once: true,
+          },
+        })
+      })
+
+      // ── Parallax cards ──
+      gsap.utils.toArray('.card-lift').forEach((el) => {
+        gsap.fromTo(
+          el as HTMLElement,
+          { y: 30 },
+          {
+            y: -30,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: el as HTMLElement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 2,
+            },
+          },
+        )
+      })
     </script>
   </body>
 </html>
