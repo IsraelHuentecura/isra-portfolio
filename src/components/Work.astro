@@ -39,8 +39,9 @@ const projects = [
     <div id="work-pin" class="overflow-hidden">
       <div id="work-track" class="flex gap-6">
         {projects.map((project) => (
-          <div class="work-card w-[85vw] shrink-0 rounded-2xl border border-border bg-surface/60 backdrop-blur-sm md:w-[550px]">
-            <div class="h-1 rounded-t-2xl" style={`background: ${project.color}`}></div>
+          <div class="work-card relative w-[85vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-surface/60 backdrop-blur-sm md:w-[550px]">
+            <!-- left accent dot -->
+            <div class="absolute top-8 left-0 h-10 w-1 rounded-r-full" style={`background: ${project.color}`}></div>
             <div class="p-8 md:p-10">
               <div class="mb-4 flex items-center gap-3">
                 <h3 class="font-display text-2xl font-bold text-text md:text-3xl">
