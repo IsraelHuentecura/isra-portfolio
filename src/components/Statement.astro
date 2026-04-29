@@ -16,14 +16,14 @@
         <span class="ship-pill-text-hover">faster, safer</span>
       </span>
       and
-      <!-- "scale" with melting effect -->
-      <span class="text-peach">sca<span id="melt-letters" class="melt-container">le</span></span>
+      <!-- "scale" with dripping letters -->
+      <span class="text-peach">sca<span id="drip-letters" class="drip-wrap">l</span><span id="drip-letters-2" class="drip-wrap">e</span></span>
     </h2>
   </div>
 </section>
 
 <style>
-  /* === "ship" pill — peach bg, hover reveals message === */
+  /* === "ship" pill === */
   .ship-pill {
     position: relative;
     display: inline-flex;
@@ -86,78 +86,109 @@
     transform: scale(1);
   }
 
-  /* === "le" melt effect — letters stretch down === */
-  .melt-container {
-    display: inline-block;
+  /* === Dripping / melting letters === */
+  .drip-wrap {
     position: relative;
+    display: inline-block;
   }
 
-  .melt-letter {
-    display: inline-block;
-    position: relative;
-    transform-origin: top center;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.4s ease;
-  }
-
-  .melt-letter::after {
-    content: attr(data-char);
+  /* The drip trail — a bar that extends below the letter */
+  .drip-trail {
     position: absolute;
-    top: 100%;
-    left: 0;
+    left: 50%;
+    top: 75%;
+    width: 0.12em;
+    height: 0;
+    transform: translateX(-50%);
+    background: currentColor;
+    border-radius: 0 0 999px 999px;
+    opacity: 0.5;
+    transition: height 1s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.6s ease;
+  }
+
+  /* Second thinner trail for depth */
+  .drip-trail-thin {
+    position: absolute;
+    left: calc(50% + 0.08em);
+    top: 75%;
+    width: 0.06em;
+    height: 0;
+    transform: translateX(-50%);
+    background: currentColor;
+    border-radius: 0 0 999px 999px;
+    opacity: 0.25;
+    transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+                opacity 0.6s ease 0.1s;
+  }
+
+  .drip-active .drip-trail {
+    height: 1.8em;
+    opacity: 0.4;
+  }
+
+  .drip-active .drip-trail-thin {
+    height: 1.4em;
+    opacity: 0.2;
+  }
+
+  /* Drop blob at the bottom of the trail */
+  .drip-blob {
+    position: absolute;
+    left: 50%;
+    bottom: -0.08em;
+    width: 0.18em;
+    height: 0.18em;
+    transform: translateX(-50%) scale(0);
+    background: currentColor;
+    border-radius: 50%;
     opacity: 0;
-    transform: scaleY(0);
-    transform-origin: top center;
-    color: inherit;
-    filter: blur(1px);
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s,
+                opacity 0.3s ease 0.6s;
   }
 
-  .melt-active .melt-letter {
-    transform: scaleY(1.6) translateY(8%);
-  }
-
-  .melt-active .melt-letter::after {
-    opacity: 0.3;
-    transform: scaleY(1.2);
-  }
-
-  /* Stagger the second letter */
-  .melt-letter:nth-child(2) {
-    transition-delay: 0.05s;
-  }
-
-  .melt-letter:nth-child(2)::after {
-    transition-delay: 0.08s;
+  .drip-active .drip-blob {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.35;
   }
 </style>
 
 <script>
-  // Melt effect on scroll — triggered by ScrollTrigger
   import { gsap } from 'gsap'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
   gsap.registerPlugin(ScrollTrigger)
 
-  const meltContainer = document.getElementById('melt-letters')
-  if (meltContainer) {
-    // Wrap each letter in a span
-    const text = meltContainer.textContent || ''
-    meltContainer.textContent = ''
-    for (const char of text) {
-      const span = document.createElement('span')
-      span.className = 'melt-letter'
-      span.setAttribute('data-char', char)
-      span.textContent = char
-      meltContainer.appendChild(span)
-    }
+  // Build drip elements for each letter
+  document.querySelectorAll('.drip-wrap').forEach((wrap) => {
+    const trail = document.createElement('span')
+    trail.className = 'drip-trail'
+    wrap.appendChild(trail)
 
-    // Toggle melt class on scroll
+    const trailThin = document.createElement('span')
+    trailThin.className = 'drip-trail-thin'
+    wrap.appendChild(trailThin)
+
+    const blob = document.createElement('span')
+    blob.className = 'drip-blob'
+    trail.appendChild(blob)
+  })
+
+  // Trigger drip on scroll
+  const dripSection = document.getElementById('drip-letters')
+  if (dripSection) {
     ScrollTrigger.create({
-      trigger: meltContainer,
-      start: 'top 70%',
-      end: 'bottom 30%',
-      onEnter: () => meltContainer.classList.add('melt-active'),
-      onLeaveBack: () => meltContainer.classList.remove('melt-active'),
+      trigger: dripSection,
+      start: 'top 75%',
+      onEnter: () => {
+        document.querySelectorAll('.drip-wrap').forEach((el, i) => {
+          setTimeout(() => el.classList.add('drip-active'), i * 150)
+        })
+      },
+      onLeaveBack: () => {
+        document.querySelectorAll('.drip-wrap').forEach((el) => {
+          el.classList.remove('drip-active')
+        })
+      },
     })
   }
 </script>
