@@ -1,0 +1,27 @@
+---
+const stats = [
+  { value: 50, suffix: '+', label: 'Agent tools' },
+  { value: 128, suffix: 'K', label: 'Context tokens' },
+  { value: 1700, suffix: '+', label: 'Tests passing' },
+  { value: 6, suffix: '', label: 'Risk strategies' },
+]
+---
+
+<section class="relative bg-text px-6 py-20 text-warm transition-colors duration-700">
+  <div class="mx-auto grid max-w-5xl grid-cols-2 gap-8 md:grid-cols-4">
+    {stats.map((stat) => (
+      <div class="text-center">
+        <div class="font-display text-4xl font-bold md:text-5xl">
+          <span
+            class="counter"
+            data-target={stat.value}
+            data-suffix={stat.suffix}
+          >
+            0{stat.suffix}
+          </span>
+        </div>
+        <p class="mt-2 text-sm text-warm/60">{stat.label}</p>
+      </div>
+    ))}
+  </div>
+</section>

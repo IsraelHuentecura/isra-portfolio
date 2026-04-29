@@ -5,18 +5,21 @@ const projects = [
     tag: 'Platform',
     description: 'Plataforma de compliance impulsada por IA con risk engine, ciclo de vida de controles, y agentes inteligentes. Usada por empresas en Chile y Latinoamérica.',
     tech: ['React', 'Hono', 'Cloudflare Workers', 'Zero Sync', 'Drizzle ORM'],
+    color: '#ffbc95',
   },
   {
     title: 'SKY Agent',
     tag: 'AI Agent',
     description: 'Agente autónomo de GRC con 50+ herramientas, context management de 128K tokens, auto-dream memory, y reasoning multi-paso con human-in-the-loop.',
     tech: ['AI SDK', 'Durable Objects', 'GSAP', 'Tool Registry'],
+    color: '#2e54fe',
   },
   {
     title: 'Risk Engine',
     tag: 'Engine',
     description: 'Motor de cálculo de riesgo con fórmulas personalizables. Soporta FIAES, Swiss Cheese, IEC ponderado, y estrategias custom con parser de expresiones.',
     tech: ['expr-eval', 'Zod', 'Strategy Pattern', 'Formula Parser'],
+    color: '#34d399',
   },
 ]
 ---
@@ -32,34 +35,38 @@ const projects = [
       </h2>
     </div>
 
-    <div class="gs-stagger space-y-5">
-      {projects.map((project) => (
-        <div class="card-lift group rounded-2xl border border-border bg-surface/60 backdrop-blur-sm transition-all">
-          <div class="flex flex-col gap-6 p-8 md:flex-row md:items-start md:p-10">
-            <div class="flex-1">
+    <!-- Horizontal scroll container -->
+    <div id="work-pin" class="overflow-hidden">
+      <div id="work-track" class="flex gap-6">
+        {projects.map((project) => (
+          <div class="work-card w-[85vw] shrink-0 rounded-2xl border border-border bg-surface/60 backdrop-blur-sm md:w-[550px]">
+            <div class="h-1 rounded-t-2xl" style={`background: ${project.color}`}></div>
+            <div class="p-8 md:p-10">
               <div class="mb-4 flex items-center gap-3">
                 <h3 class="font-display text-2xl font-bold text-text md:text-3xl">
                   {project.title}
                 </h3>
-                <span class="rounded-full bg-peach/10 px-3 py-0.5 font-mono text-[10px] tracking-widest text-peach-deep uppercase">
+                <span
+                  class="rounded-full px-3 py-0.5 font-mono text-[10px] tracking-widest uppercase"
+                  style={`background: ${project.color}15; color: ${project.color}`}
+                >
                   {project.tag}
                 </span>
               </div>
-              <p class="max-w-xl text-base leading-relaxed text-text-muted">
+              <p class="mb-6 text-base leading-relaxed text-text-muted">
                 {project.description}
               </p>
-            </div>
-
-            <div class="flex shrink-0 flex-wrap gap-2 md:max-w-xs md:justify-end">
-              {project.tech.map((t) => (
-                <span class="rounded-lg bg-warm-alt px-3 py-1.5 font-mono text-[11px] text-text-muted">
-                  {t}
-                </span>
-              ))}
+              <div class="flex flex-wrap gap-2">
+                {project.tech.map((t) => (
+                  <span class="rounded-lg bg-warm-alt px-3 py-1.5 font-mono text-[11px] text-text-muted">
+                    {t}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 </section>
