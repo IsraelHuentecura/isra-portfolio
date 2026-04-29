@@ -19,9 +19,11 @@ Reglas:
 - Nunca inventes información
 - Agrega un emoji relevante al final de cada respuesta`
 
-export const POST: APIRoute = async ({ request, locals }) => {
-  const runtime = locals.runtime
-  if (!runtime?.env?.AI) {
+export const POST: APIRoute = async ({ request }) => {
+  const { env } = await import('cloudflare:workers')
+  const AI = (env as Record<string, unknown>).AI as Ai | undefined
+
+  if (!AI) {
     return new Response(
       JSON.stringify({ error: 'AI binding not available' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } },
@@ -38,7 +40,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     )
   }
 
-  const stream = await runtime.env.AI.run(
+  const stream = await AI.run(
     '@cf/meta/llama-3.1-8b-instruct',
     {
       messages: [
