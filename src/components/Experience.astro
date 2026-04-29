@@ -1,0 +1,46 @@
+---
+const timeline = [
+  {
+    period: '2025 — Presente',
+    role: 'Software Engineer',
+    company: 'Skyward AI',
+    description: 'Desarrollo del risk engine, SKY Agent (agente autónomo de compliance), sistema de importación de matrices, y arquitectura de controles. Full-stack TypeScript sobre Cloudflare Workers.',
+  },
+]
+---
+
+<section class="relative px-6 py-32 md:py-40">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-16">
+      <span class="mb-3 block font-mono text-xs tracking-[0.2em] text-peach uppercase">Trayectoria</span>
+      <h2 class="font-display text-4xl font-bold tracking-tight text-chalk md:text-5xl">
+        Experience<span class="text-peach">.</span>
+      </h2>
+    </div>
+
+    <div class="relative ml-4 border-l border-ash/20 pl-10 md:ml-0 md:pl-16">
+      {timeline.map((item) => (
+        <div class="relative pb-12">
+          <!-- Dot -->
+          <div class="absolute -left-[calc(2.5rem+5px)] top-1 flex h-2.5 w-2.5 items-center justify-center md:-left-[calc(4rem+5px)]">
+            <div class="h-2.5 w-2.5 rounded-full bg-peach"></div>
+            <div class="animate-pulse-glow absolute h-5 w-5 rounded-full bg-peach/20"></div>
+          </div>
+
+          <span class="mb-2 block font-mono text-xs tracking-widest text-peach uppercase">
+            {item.period}
+          </span>
+          <h3 class="font-display text-2xl font-bold text-chalk">
+            {item.role}
+          </h3>
+          <p class="mb-3 font-display text-lg font-medium text-stone">
+            {item.company}
+          </p>
+          <p class="max-w-2xl text-base leading-relaxed text-stone">
+            {item.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

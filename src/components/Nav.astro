@@ -1,0 +1,30 @@
+---
+---
+
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10">
+    <a href="#" class="font-display text-xl font-bold tracking-tight text-chalk transition-colors hover:text-peach">
+      isra<span class="text-peach">.</span>
+    </a>
+    <div class="flex items-center gap-8">
+      <a href="#about" class="hidden text-sm font-medium text-stone transition-colors hover:text-chalk md:block">Sobre mi</a>
+      <a href="#work" class="hidden text-sm font-medium text-stone transition-colors hover:text-chalk md:block">Proyectos</a>
+      <a href="#contact" class="text-sm font-medium text-stone transition-colors hover:text-chalk">Contacto</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const nav = document.getElementById('nav')
+  if (nav) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        nav.style.backgroundColor = 'rgba(5, 5, 5, 0.85)'
+        nav.style.backdropFilter = 'blur(12px)'
+      } else {
+        nav.style.backgroundColor = 'transparent'
+        nav.style.backdropFilter = 'none'
+      }
+    })
+  }
+</script>
