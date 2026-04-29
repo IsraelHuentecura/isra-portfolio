@@ -1,0 +1,163 @@
+---
+---
+
+<section class="relative flex min-h-[80vh] items-center justify-center overflow-hidden px-6 py-28">
+  <!-- Subtle peach gradient at bottom -->
+  <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-peach/[0.06] to-transparent"></div>
+
+  <div class="relative z-10 mx-auto max-w-5xl">
+    <h2 class="gs-reveal font-display text-[clamp(2.8rem,8vw,7.5rem)] leading-[1.05] font-bold tracking-[-0.04em] text-text-muted">
+      Building systems<br />
+      that make teams<br />
+      <!-- "ship" with interactive pill -->
+      <span id="ship-pill" class="ship-pill relative inline-block cursor-pointer">
+        <span class="ship-pill-bg"></span>
+        <span class="ship-pill-text-default">ship</span>
+        <span class="ship-pill-text-hover">faster, safer</span>
+      </span>
+      and
+      <!-- "scale" with melting effect -->
+      <span class="text-peach">sca<span id="melt-letters" class="melt-container">le</span></span>
+    </h2>
+  </div>
+</section>
+
+<style>
+  /* === "ship" pill — peach bg, hover reveals message === */
+  .ship-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: baseline;
+    padding: 0.05em 0.4em;
+    border-radius: 9999px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ship-pill-bg {
+    position: absolute;
+    inset: 0;
+    background: #ffbc95;
+    border-radius: inherit;
+    transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+
+  .ship-pill-text-default,
+  .ship-pill-text-hover {
+    position: relative;
+    z-index: 1;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ship-pill-text-default {
+    color: #faf6ef;
+    opacity: 1;
+  }
+
+  .ship-pill-text-hover {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.35em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transform: scale(0.8);
+    white-space: nowrap;
+  }
+
+  .ship-pill:hover .ship-pill-bg {
+    background: #333333;
+  }
+
+  .ship-pill:hover .ship-pill-text-default {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  .ship-pill:hover .ship-pill-text-hover {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* === "le" melt effect — letters stretch down === */
+  .melt-container {
+    display: inline-block;
+    position: relative;
+  }
+
+  .melt-letter {
+    display: inline-block;
+    position: relative;
+    transform-origin: top center;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.4s ease;
+  }
+
+  .melt-letter::after {
+    content: attr(data-char);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top center;
+    color: inherit;
+    filter: blur(1px);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .melt-active .melt-letter {
+    transform: scaleY(1.6) translateY(8%);
+  }
+
+  .melt-active .melt-letter::after {
+    opacity: 0.3;
+    transform: scaleY(1.2);
+  }
+
+  /* Stagger the second letter */
+  .melt-letter:nth-child(2) {
+    transition-delay: 0.05s;
+  }
+
+  .melt-letter:nth-child(2)::after {
+    transition-delay: 0.08s;
+  }
+</style>
+
+<script>
+  // Melt effect on scroll — triggered by ScrollTrigger
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const meltContainer = document.getElementById('melt-letters')
+  if (meltContainer) {
+    // Wrap each letter in a span
+    const text = meltContainer.textContent || ''
+    meltContainer.textContent = ''
+    for (const char of text) {
+      const span = document.createElement('span')
+      span.className = 'melt-letter'
+      span.setAttribute('data-char', char)
+      span.textContent = char
+      meltContainer.appendChild(span)
+    }
+
+    // Toggle melt class on scroll
+    ScrollTrigger.create({
+      trigger: meltContainer,
+      start: 'top 70%',
+      end: 'bottom 30%',
+      onEnter: () => meltContainer.classList.add('melt-active'),
+      onLeaveBack: () => meltContainer.classList.remove('melt-active'),
+    })
+  }
+</script>
