@@ -1,7 +1,7 @@
 ---
 ---
 
-<section class="relative flex min-h-[80vh] items-center justify-center overflow-hidden px-6 py-28">
+<section class="relative flex min-h-[80vh] items-center justify-center px-6 py-28">
   <!-- Subtle peach gradient at bottom -->
   <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-peach/[0.06] to-transparent"></div>
 
@@ -86,109 +86,7 @@
     transform: scale(1);
   }
 
-  /* === Dripping / melting letters === */
-  .drip-wrap {
-    position: relative;
-    display: inline-block;
-  }
-
-  /* The drip trail — a bar that extends below the letter */
-  .drip-trail {
-    position: absolute;
-    left: 50%;
-    top: 75%;
-    width: 0.12em;
-    height: 0;
-    transform: translateX(-50%);
-    background: currentColor;
-    border-radius: 0 0 999px 999px;
-    opacity: 0.5;
-    transition: height 1s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.6s ease;
-  }
-
-  /* Second thinner trail for depth */
-  .drip-trail-thin {
-    position: absolute;
-    left: calc(50% + 0.08em);
-    top: 75%;
-    width: 0.06em;
-    height: 0;
-    transform: translateX(-50%);
-    background: currentColor;
-    border-radius: 0 0 999px 999px;
-    opacity: 0.25;
-    transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
-                opacity 0.6s ease 0.1s;
-  }
-
-  .drip-active .drip-trail {
-    height: 1.8em;
-    opacity: 0.4;
-  }
-
-  .drip-active .drip-trail-thin {
-    height: 1.4em;
-    opacity: 0.2;
-  }
-
-  /* Drop blob at the bottom of the trail */
-  .drip-blob {
-    position: absolute;
-    left: 50%;
-    bottom: -0.08em;
-    width: 0.18em;
-    height: 0.18em;
-    transform: translateX(-50%) scale(0);
-    background: currentColor;
-    border-radius: 50%;
-    opacity: 0;
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s,
-                opacity 0.3s ease 0.6s;
-  }
-
-  .drip-active .drip-blob {
-    transform: translateX(-50%) scale(1);
-    opacity: 0.35;
-  }
+  /* Drip styles are in global.css (scoped styles don't apply to JS-created elements) */
 </style>
 
-<script>
-  import { gsap } from 'gsap'
-  import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  gsap.registerPlugin(ScrollTrigger)
-
-  // Build drip elements for each letter
-  document.querySelectorAll('.drip-wrap').forEach((wrap) => {
-    const trail = document.createElement('span')
-    trail.className = 'drip-trail'
-    wrap.appendChild(trail)
-
-    const trailThin = document.createElement('span')
-    trailThin.className = 'drip-trail-thin'
-    wrap.appendChild(trailThin)
-
-    const blob = document.createElement('span')
-    blob.className = 'drip-blob'
-    trail.appendChild(blob)
-  })
-
-  // Trigger drip on scroll
-  const dripSection = document.getElementById('drip-letters')
-  if (dripSection) {
-    ScrollTrigger.create({
-      trigger: dripSection,
-      start: 'top 75%',
-      onEnter: () => {
-        document.querySelectorAll('.drip-wrap').forEach((el, i) => {
-          setTimeout(() => el.classList.add('drip-active'), i * 150)
-        })
-      },
-      onLeaveBack: () => {
-        document.querySelectorAll('.drip-wrap').forEach((el) => {
-          el.classList.remove('drip-active')
-        })
-      },
-    })
-  }
-</script>
+<!-- Drip logic handled in Layout.astro main script -->

@@ -20,7 +20,6 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
   <body class="bg-warm grain">
     <slot />
 
-    <!-- GSAP + ScrollTrigger + Lenis -->
     <script>
       import { gsap } from 'gsap'
       import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -28,13 +27,13 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
 
       gsap.registerPlugin(ScrollTrigger)
 
-      // Lenis smooth scroll
+      // ── Lenis smooth scroll ──
       const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
       lenis.on('scroll', ScrollTrigger.update)
       gsap.ticker.add((time) => lenis.raf(time * 1000))
       gsap.ticker.lagSmoothing(0)
 
-      // Scroll-triggered reveals — fade up
+      // ── Scroll-triggered reveals — fade up ──
       gsap.utils.toArray('.gs-reveal').forEach((el) => {
         gsap.to(el as HTMLElement, {
           opacity: 1,
@@ -49,7 +48,7 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
         })
       })
 
-      // Stagger groups — children fade up with stagger
+      // ── Stagger groups ──
       gsap.utils.toArray('.gs-stagger').forEach((container) => {
         const children = (container as HTMLElement).children
         gsap.fromTo(
@@ -70,7 +69,7 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
         )
       })
 
-      // Scale reveals
+      // ── Scale reveals ──
       gsap.utils.toArray('.gs-reveal-scale').forEach((el) => {
         gsap.to(el as HTMLElement, {
           opacity: 1,
@@ -85,7 +84,7 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
         })
       })
 
-      // Left reveals
+      // ── Left reveals ──
       gsap.utils.toArray('.gs-reveal-left').forEach((el) => {
         gsap.to(el as HTMLElement, {
           opacity: 1,
@@ -100,7 +99,7 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
         })
       })
 
-      // Nav background on scroll
+      // ── Nav background on scroll ──
       const nav = document.getElementById('nav')
       if (nav) {
         ScrollTrigger.create({
@@ -119,7 +118,7 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
         })
       }
 
-      // Hero parallax on shapes
+      // ── Hero parallax on shapes ──
       gsap.utils.toArray('.hero-shape').forEach((el, i) => {
         gsap.to(el as HTMLElement, {
           y: -60 - i * 20,
@@ -131,6 +130,39 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
           },
         })
       })
+
+      // ── Drip effect on Statement section ──
+      document.querySelectorAll('.drip-wrap').forEach((wrap) => {
+        const trail = document.createElement('span')
+        trail.className = 'drip-trail'
+        wrap.appendChild(trail)
+
+        const trailThin = document.createElement('span')
+        trailThin.className = 'drip-trail-thin'
+        wrap.appendChild(trailThin)
+
+        const blob = document.createElement('span')
+        blob.className = 'drip-blob'
+        trail.appendChild(blob)
+      })
+
+      const dripTrigger = document.getElementById('drip-letters')
+      if (dripTrigger) {
+        ScrollTrigger.create({
+          trigger: dripTrigger,
+          start: 'top 75%',
+          onEnter: () => {
+            document.querySelectorAll('.drip-wrap').forEach((el, i) => {
+              setTimeout(() => el.classList.add('drip-active'), i * 150)
+            })
+          },
+          onLeaveBack: () => {
+            document.querySelectorAll('.drip-wrap').forEach((el) => {
+              el.classList.remove('drip-active')
+            })
+          },
+        })
+      }
     </script>
   </body>
 </html>

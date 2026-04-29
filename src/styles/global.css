@@ -90,6 +90,66 @@ body {
   50% { transform: translate(8px, -12px) scale(1.04); }
 }
 
+/* Drip / melt effect */
+.drip-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.drip-trail {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 90%;
+  width: 6px;
+  height: 0;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, #ffbc95, rgba(255, 188, 149, 0.2));
+  border-radius: 0 0 999px 999px;
+  transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drip-trail-thin {
+  display: block;
+  position: absolute;
+  left: calc(50% + 10px);
+  top: 90%;
+  width: 3px;
+  height: 0;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, rgba(255, 188, 149, 0.6), rgba(255, 188, 149, 0.05));
+  border-radius: 0 0 999px 999px;
+  transition: height 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.drip-active .drip-trail {
+  height: 180px;
+}
+
+.drip-active .drip-trail-thin {
+  height: 130px;
+}
+
+.drip-blob {
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) scale(0);
+  background: #ffbc95;
+  border-radius: 50%;
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s,
+              opacity 0.4s ease 0.8s;
+}
+
+.drip-active .drip-blob {
+  transform: translateX(-50%) scale(1);
+  opacity: 0.7;
+}
+
 .float-1 { animation: float-1 18s ease-in-out infinite; }
 .float-2 { animation: float-2 14s ease-in-out infinite; }
 .float-3 { animation: float-3 10s ease-in-out infinite; }
