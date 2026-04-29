@@ -9,7 +9,6 @@
     <div class="hero-shape float-3 absolute top-[30%] right-[22%] h-14 w-14 rotate-45 rounded-lg bg-blue/8"></div>
     <div class="hero-shape float-2 absolute bottom-[25%] left-[18%] h-36 w-36 rounded-full border border-peach/10"></div>
     <div class="hero-shape float-1 absolute top-[70%] right-[35%] h-10 w-10 rounded-full bg-peach/15"></div>
-    <!-- Large ambient glow -->
     <div class="absolute top-1/2 left-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-peach/[0.04] blur-3xl"></div>
   </div>
 
@@ -21,11 +20,23 @@
       </span>
     </div>
 
-    <!-- Name — massive display type like juanmora.co -->
-    <h1 class="gs-reveal font-display text-[clamp(3.5rem,12vw,9rem)] leading-[0.9] font-bold tracking-[-0.04em] text-text">
-      Isra<br />
-      <span class="text-peach">Huentecura</span>
-    </h1>
+    <!-- Name with mouse-tracking distortion -->
+    <div id="hero-name" class="gs-reveal" style="perspective: 800px;">
+      <h1
+        id="hero-heading"
+        class="font-display text-[clamp(3.5rem,12vw,9rem)] leading-[0.9] font-bold tracking-[-0.04em] text-text"
+        style="transition: transform 0.15s ease-out; transform-style: preserve-3d; will-change: transform;"
+      >
+        <!-- Line 1 -->
+        <span class="hero-line">
+          <span class="hero-letter" data-index="0">I</span><span class="hero-letter" data-index="1">s</span><span class="hero-letter" data-index="2">r</span><span class="hero-letter" data-index="3">a</span>
+        </span>
+        <!-- Line 2 — peach -->
+        <span class="hero-line hero-line-peach">
+          <span class="hero-letter" data-index="4">H</span><span class="hero-letter" data-index="5">u</span><span class="hero-letter" data-index="6">e</span><span class="hero-letter" data-index="7">n</span><span class="hero-letter" data-index="8">t</span><span class="hero-letter" data-index="9">e</span><span class="hero-letter" data-index="10">c</span><span class="hero-letter" data-index="11">u</span><span class="hero-letter" data-index="12">r</span><span class="hero-letter" data-index="13">a</span>
+        </span>
+      </h1>
+    </div>
 
     <!-- Tagline -->
     <p class="gs-reveal mx-auto mt-8 max-w-lg text-lg leading-relaxed text-text-muted md:text-xl">
@@ -61,3 +72,80 @@
     </div>
   </div>
 </section>
+
+<style>
+  .hero-letter {
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .hero-line {
+    display: block;
+  }
+
+  .hero-line-peach .hero-letter {
+    color: #ffbc95;
+  }
+</style>
+
+<script>
+  const container = document.getElementById('hero-name')
+  const heading = document.getElementById('hero-heading')
+  if (container && heading) {
+    const allLetters = heading.querySelectorAll('.hero-letter') as NodeListOf<HTMLSpanElement>
+    let mouseX = 0
+    let mouseY = 0
+    let rafId: number | null = null
+
+    container.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect()
+      mouseX = e.clientX - rect.left
+      mouseY = e.clientY - rect.top
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateLetters)
+      }
+    })
+
+    container.addEventListener('mouseleave', () => {
+      allLetters.forEach((letter) => {
+        letter.style.transform = 'translate(0, 0) rotate(0deg) scale(1)'
+      })
+      heading.style.transform = 'rotateX(0deg) rotateY(0deg)'
+    })
+
+    function updateLetters() {
+      rafId = null
+      const containerRect = container!.getBoundingClientRect()
+      const centerX = containerRect.width / 2
+      const centerY = containerRect.height / 2
+
+      // Subtle 3D tilt on the whole heading
+      const tiltX = ((mouseY - centerY) / centerY) * -3
+      const tiltY = ((mouseX - centerX) / centerX) * 4
+      heading!.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`
+
+      // Per-letter distortion based on proximity to cursor
+      allLetters.forEach((letter) => {
+        const rect = letter.getBoundingClientRect()
+        const letterCenterX = rect.left + rect.width / 2 - containerRect.left
+        const letterCenterY = rect.top + rect.height / 2 - containerRect.top
+
+        const dx = mouseX - letterCenterX
+        const dy = mouseY - letterCenterY
+        const distance = Math.sqrt(dx * dx + dy * dy)
+
+        // Letters within radius get pushed away from cursor
+        const radius = 250
+        const strength = Math.max(0, 1 - distance / radius)
+
+        const pushX = -dx * strength * 0.12
+        const pushY = -dy * strength * 0.08
+        const rotate = dx * strength * 0.02
+        const scale = 1 + strength * 0.06
+
+        letter.style.transform = `translate(${pushX}px, ${pushY}px) rotate(${rotate}deg) scale(${scale})`
+      })
+    }
+  }
+</script>
