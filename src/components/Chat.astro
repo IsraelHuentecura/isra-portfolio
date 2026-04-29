@@ -1,0 +1,261 @@
+---
+---
+
+<section class="relative px-6 py-28 md:py-36">
+  <div class="mx-auto max-w-2xl">
+    <div class="section-divider mb-20"></div>
+
+    <div class="mb-8 text-center">
+      <span class="gs-reveal mb-3 block font-mono text-xs tracking-[0.15em] text-peach uppercase">AI Chat</span>
+      <h2 class="gs-reveal font-display text-3xl font-bold tracking-[-0.03em] text-text md:text-4xl">
+        Pregúntale a <span class="text-peach">isra-3.5-turbo</span>
+      </h2>
+      <p class="gs-reveal mt-3 text-sm text-text-muted">
+        Modelo entrenado con datos sobre mi. 3 mensajes gratis.
+      </p>
+    </div>
+
+    <!-- Chat window -->
+    <div class="gs-reveal-scale overflow-hidden rounded-2xl border border-border bg-surface/80 shadow-sm backdrop-blur-sm">
+      <!-- Top bar -->
+      <div class="flex items-center gap-2 border-b border-border px-4 py-3">
+        <div class="h-2.5 w-2.5 rounded-full bg-emerald-400"></div>
+        <span class="font-mono text-[11px] text-text-muted">isra-3.5-turbo</span>
+        <span class="ml-auto font-mono text-[10px] text-text-light">v0.1.0</span>
+      </div>
+
+      <!-- Messages area -->
+      <div id="chat-messages" class="flex h-80 flex-col gap-3 overflow-y-auto p-4">
+        <!-- Welcome message -->
+        <div class="chat-msg-ai flex gap-3">
+          <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-peach/15 font-mono text-xs font-bold text-peach">i</div>
+          <div class="rounded-xl rounded-tl-sm bg-warm-alt px-4 py-2.5 text-sm leading-relaxed text-text">
+            Hola! Soy isra-3.5-turbo. Pregúntame sobre la experiencia de Isra, su stack, proyectos, o lo que quieras saber. 👋
+          </div>
+        </div>
+      </div>
+
+      <!-- Rate limit overlay (hidden by default) -->
+      <div id="chat-rate-limit" class="hidden">
+        <div class="border-t border-border bg-warm-alt/80 px-4 py-6 text-center backdrop-blur-sm">
+          <div class="mb-2 font-mono text-xs text-red-500/80">⚠ RateLimitError</div>
+          <p class="font-display text-sm font-bold text-text">Token limit exceeded</p>
+          <p class="mt-1 text-xs text-text-muted">
+            Has usado tus 3 mensajes gratuitos.<br />
+            Próximo reset en <span id="rate-limit-timer" class="font-mono text-peach">1h 47m</span>
+          </p>
+          <div class="mt-4 flex flex-col gap-2">
+            <a href="#contact" class="inline-block rounded-full bg-text px-5 py-2 text-xs font-bold text-warm transition-all hover:scale-105">
+              Upgrade a Isra Pro — $0/mes
+            </a>
+            <span class="text-[10px] text-text-light">(también conocido como enviarme un email)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div id="chat-input-area" class="border-t border-border p-3">
+        <form id="chat-form" class="flex gap-2">
+          <input
+            id="chat-input"
+            type="text"
+            placeholder="Pregunta algo sobre Isra..."
+            autocomplete="off"
+            class="flex-1 rounded-xl border border-border bg-warm px-4 py-2.5 font-body text-sm text-text placeholder:text-text-light focus:border-peach/40 focus:outline-none"
+          />
+          <button
+            id="chat-send"
+            type="submit"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-text text-warm transition-all hover:scale-105 hover:bg-peach disabled:opacity-30"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </form>
+        <div class="mt-2 flex items-center justify-between px-1">
+          <span id="chat-token-count" class="font-mono text-[10px] text-text-light">0 / 3 mensajes</span>
+          <span class="font-mono text-[10px] text-text-light">powered by Workers AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('chat-form') as HTMLFormElement
+  const input = document.getElementById('chat-input') as HTMLInputElement
+  const sendBtn = document.getElementById('chat-send') as HTMLButtonElement
+  const messagesEl = document.getElementById('chat-messages') as HTMLDivElement
+  const rateLimitEl = document.getElementById('chat-rate-limit') as HTMLDivElement
+  const inputArea = document.getElementById('chat-input-area') as HTMLDivElement
+  const tokenCount = document.getElementById('chat-token-count') as HTMLSpanElement
+  const timerEl = document.getElementById('rate-limit-timer') as HTMLSpanElement
+
+  const MAX_MESSAGES = 3
+  let messageCount = parseInt(localStorage.getItem('isra-chat-count') ?? '0', 10)
+  const rateLimitedAt = parseInt(localStorage.getItem('isra-chat-limited') ?? '0', 10)
+
+  // Check if still rate limited
+  function checkRateLimit(): boolean {
+    if (rateLimitedAt > 0) {
+      const elapsed = Date.now() - rateLimitedAt
+      const twoHours = 2 * 60 * 60 * 1000
+      if (elapsed < twoHours) {
+        showRateLimit()
+        return true
+      }
+      // Reset
+      localStorage.removeItem('isra-chat-limited')
+      localStorage.setItem('isra-chat-count', '0')
+      messageCount = 0
+    }
+    return false
+  }
+
+  function showRateLimit(): void {
+    rateLimitEl.classList.remove('hidden')
+    inputArea.classList.add('hidden')
+    // Timer countdown
+    updateTimer()
+    setInterval(updateTimer, 60000)
+  }
+
+  function updateTimer(): void {
+    const elapsed = Date.now() - rateLimitedAt
+    const remaining = Math.max(0, 2 * 60 * 60 * 1000 - elapsed)
+    const hours = Math.floor(remaining / 3600000)
+    const minutes = Math.floor((remaining % 3600000) / 60000)
+    timerEl.textContent = `${hours}h ${minutes}m`
+  }
+
+  function updateTokenDisplay(): void {
+    tokenCount.textContent = `${messageCount} / ${MAX_MESSAGES} mensajes`
+  }
+
+  function addMessage(role: 'user' | 'ai', text: string): HTMLDivElement {
+    const wrapper = document.createElement('div')
+    wrapper.className = role === 'user'
+      ? 'flex gap-3 justify-end'
+      : 'chat-msg-ai flex gap-3'
+
+    if (role === 'user') {
+      const bubble = document.createElement('div')
+      bubble.className = 'rounded-xl rounded-tr-sm bg-text px-4 py-2.5 text-sm leading-relaxed text-warm'
+      bubble.textContent = text
+      wrapper.appendChild(bubble)
+    } else {
+      const icon = document.createElement('div')
+      icon.className = 'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-peach/15 font-mono text-xs font-bold text-peach'
+      icon.textContent = 'i'
+      wrapper.appendChild(icon)
+
+      const bubble = document.createElement('div')
+      bubble.className = 'rounded-xl rounded-tl-sm bg-warm-alt px-4 py-2.5 text-sm leading-relaxed text-text'
+      bubble.textContent = text
+      wrapper.appendChild(bubble)
+    }
+
+    messagesEl.appendChild(wrapper)
+    messagesEl.scrollTop = messagesEl.scrollHeight
+    return wrapper
+  }
+
+  function getAiBubble(wrapper: HTMLDivElement): HTMLDivElement {
+    return wrapper.querySelector('.rounded-xl') as HTMLDivElement ?? wrapper.lastElementChild as HTMLDivElement
+  }
+
+  checkRateLimit()
+  updateTokenDisplay()
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const message = input.value.trim()
+    if (!message) {
+      return
+    }
+
+    if (messageCount >= MAX_MESSAGES) {
+      localStorage.setItem('isra-chat-limited', String(Date.now()))
+      showRateLimit()
+      return
+    }
+
+    // Add user message
+    addMessage('user', message)
+    input.value = ''
+    sendBtn.disabled = true
+
+    // Add empty AI message for streaming
+    const aiWrapper = addMessage('ai', '')
+    const aiBubble = getAiBubble(aiWrapper)
+    aiBubble.textContent = '●●●'
+    aiBubble.classList.add('animate-pulse')
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      })
+
+      if (!response.ok) {
+        throw new Error('API error')
+      }
+
+      aiBubble.textContent = ''
+      aiBubble.classList.remove('animate-pulse')
+
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
+      let fullText = ''
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) {
+            break
+          }
+
+          const chunk = decoder.decode(value, { stream: true })
+          // Workers AI SSE format: data: {"response":"text"}
+          const lines = chunk.split('\n')
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6)
+              if (data === '[DONE]') {
+                continue
+              }
+              try {
+                const parsed = JSON.parse(data)
+                if (parsed.response) {
+                  fullText += parsed.response
+                  aiBubble.textContent = fullText
+                  messagesEl.scrollTop = messagesEl.scrollHeight
+                }
+              } catch {
+                // Ignore parse errors on partial chunks
+              }
+            }
+          }
+        }
+      }
+
+      // Increment counter
+      messageCount++
+      localStorage.setItem('isra-chat-count', String(messageCount))
+      updateTokenDisplay()
+
+      if (messageCount >= MAX_MESSAGES) {
+        localStorage.setItem('isra-chat-limited', String(Date.now()))
+        showRateLimit()
+      }
+    } catch {
+      aiBubble.textContent = 'Error de conexión. Intenta de nuevo. 🔌'
+      aiBubble.classList.remove('animate-pulse')
+    } finally {
+      sendBtn.disabled = false
+      input.focus()
+    }
+  })
+</script>
