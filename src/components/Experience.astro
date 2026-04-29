@@ -9,34 +9,35 @@ const timeline = [
 ]
 ---
 
-<section class="relative px-6 py-32 md:py-40">
+<section class="relative px-6 py-28 md:py-36">
   <div class="mx-auto max-w-6xl">
-    <div class="mb-16">
-      <span class="mb-3 block font-mono text-xs tracking-[0.2em] text-peach uppercase">Trayectoria</span>
-      <h2 class="font-display text-4xl font-bold tracking-tight text-chalk md:text-5xl">
+    <div class="section-divider mb-20"></div>
+
+    <div class="mb-14">
+      <span class="gs-reveal mb-3 block font-mono text-xs tracking-[0.15em] text-peach uppercase">Trayectoria</span>
+      <h2 class="gs-reveal font-display text-[clamp(2.5rem,6vw,4rem)] font-bold tracking-[-0.03em] text-text">
         Experience<span class="text-peach">.</span>
       </h2>
     </div>
 
-    <div class="relative ml-4 border-l border-ash/20 pl-10 md:ml-0 md:pl-16">
+    <div class="relative ml-4 border-l border-text-light/20 pl-10 md:ml-0 md:pl-16">
       {timeline.map((item) => (
-        <div class="relative pb-12">
+        <div class="gs-reveal-left relative pb-12">
           <!-- Dot -->
-          <div class="absolute -left-[calc(2.5rem+5px)] top-1 flex h-2.5 w-2.5 items-center justify-center md:-left-[calc(4rem+5px)]">
-            <div class="h-2.5 w-2.5 rounded-full bg-peach"></div>
-            <div class="animate-pulse-glow absolute h-5 w-5 rounded-full bg-peach/20"></div>
+          <div class="absolute -left-[calc(2.5rem+5px)] top-2 md:-left-[calc(4rem+5px)]">
+            <div class="dot-pulse h-2.5 w-2.5 rounded-full bg-peach"></div>
           </div>
 
           <span class="mb-2 block font-mono text-xs tracking-widest text-peach uppercase">
             {item.period}
           </span>
-          <h3 class="font-display text-2xl font-bold text-chalk">
+          <h3 class="font-display text-2xl font-bold text-text">
             {item.role}
           </h3>
-          <p class="mb-3 font-display text-lg font-medium text-stone">
+          <p class="mb-3 text-lg font-medium text-text-muted">
             {item.company}
           </p>
-          <p class="max-w-2xl text-base leading-relaxed text-stone">
+          <p class="max-w-2xl text-base leading-relaxed text-text-muted">
             {item.description}
           </p>
         </div>

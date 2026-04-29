@@ -17,7 +17,120 @@ const { title = 'Isra Huentecura — Software Engineer' } = Astro.props
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
-  <body class="bg-void grain">
+  <body class="bg-warm grain">
     <slot />
+
+    <!-- GSAP + ScrollTrigger + Lenis -->
+    <script>
+      import { gsap } from 'gsap'
+      import { ScrollTrigger } from 'gsap/ScrollTrigger'
+      import Lenis from 'lenis'
+
+      gsap.registerPlugin(ScrollTrigger)
+
+      // Lenis smooth scroll
+      const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
+      lenis.on('scroll', ScrollTrigger.update)
+      gsap.ticker.add((time) => lenis.raf(time * 1000))
+      gsap.ticker.lagSmoothing(0)
+
+      // Scroll-triggered reveals — fade up
+      gsap.utils.toArray('.gs-reveal').forEach((el) => {
+        gsap.to(el as HTMLElement, {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el as HTMLElement,
+            start: 'top 88%',
+            once: true,
+          },
+        })
+      })
+
+      // Stagger groups — children fade up with stagger
+      gsap.utils.toArray('.gs-stagger').forEach((container) => {
+        const children = (container as HTMLElement).children
+        gsap.fromTo(
+          children,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: container as HTMLElement,
+              start: 'top 85%',
+              once: true,
+            },
+          },
+        )
+      })
+
+      // Scale reveals
+      gsap.utils.toArray('.gs-reveal-scale').forEach((el) => {
+        gsap.to(el as HTMLElement, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el as HTMLElement,
+            start: 'top 88%',
+            once: true,
+          },
+        })
+      })
+
+      // Left reveals
+      gsap.utils.toArray('.gs-reveal-left').forEach((el) => {
+        gsap.to(el as HTMLElement, {
+          opacity: 1,
+          x: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el as HTMLElement,
+            start: 'top 88%',
+            once: true,
+          },
+        })
+      })
+
+      // Nav background on scroll
+      const nav = document.getElementById('nav')
+      if (nav) {
+        ScrollTrigger.create({
+          start: 60,
+          onUpdate: (self) => {
+            if (self.direction === 1 && window.scrollY > 60) {
+              nav.style.backgroundColor = 'rgba(250, 246, 239, 0.9)'
+              nav.style.backdropFilter = 'blur(12px)'
+              nav.style.borderBottom = '1px solid rgba(100,100,100,0.07)'
+            } else if (window.scrollY <= 60) {
+              nav.style.backgroundColor = 'transparent'
+              nav.style.backdropFilter = 'none'
+              nav.style.borderBottom = 'none'
+            }
+          },
+        })
+      }
+
+      // Hero parallax on shapes
+      gsap.utils.toArray('.hero-shape').forEach((el, i) => {
+        gsap.to(el as HTMLElement, {
+          y: -60 - i * 20,
+          scrollTrigger: {
+            trigger: '#hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.5,
+          },
+        })
+      })
+    </script>
   </body>
 </html>

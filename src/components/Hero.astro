@@ -1,67 +1,63 @@
 ---
 ---
 
-<section class="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
-  <!-- Floating shapes -->
+<section id="hero" class="relative flex min-h-screen items-center justify-center overflow-hidden px-6">
+  <!-- Floating shapes — parallax on scroll -->
   <div class="pointer-events-none absolute inset-0">
-    <!-- Peach pill -->
-    <div class="animate-float-slow absolute top-[15%] left-[10%] h-16 w-32 rounded-full bg-peach/10 blur-sm"></div>
-    <!-- Circle -->
-    <div class="animate-float-medium absolute top-[60%] right-[15%] h-24 w-24 rounded-full border border-peach/15"></div>
-    <!-- Hex-like -->
-    <div class="animate-float-fast absolute top-[30%] right-[25%] h-12 w-12 rotate-45 rounded-md bg-peach/5"></div>
-    <!-- Large ring -->
-    <div class="animate-float-medium absolute bottom-[20%] left-[20%] h-40 w-40 rounded-full border border-chalk/5"></div>
-    <!-- Dot cluster -->
-    <div class="animate-pulse-glow absolute top-[45%] left-[60%] h-2 w-2 rounded-full bg-peach/40"></div>
-    <div class="animate-pulse-glow delay-2 absolute top-[47%] left-[62%] h-1.5 w-1.5 rounded-full bg-peach/30"></div>
-    <div class="animate-pulse-glow delay-4 absolute top-[43%] left-[63%] h-1 w-1 rounded-full bg-peach/20"></div>
-    <!-- Gradient glow -->
-    <div class="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-peach/[0.02] blur-3xl"></div>
+    <div class="hero-shape float-1 absolute top-[18%] left-[8%] h-20 w-36 rounded-full bg-peach/20 blur-sm"></div>
+    <div class="hero-shape float-2 absolute top-[55%] right-[12%] h-28 w-28 rounded-full border-2 border-blue/20"></div>
+    <div class="hero-shape float-3 absolute top-[30%] right-[22%] h-14 w-14 rotate-45 rounded-lg bg-blue/8"></div>
+    <div class="hero-shape float-2 absolute bottom-[25%] left-[18%] h-36 w-36 rounded-full border border-peach/10"></div>
+    <div class="hero-shape float-1 absolute top-[70%] right-[35%] h-10 w-10 rounded-full bg-peach/15"></div>
+    <!-- Large ambient glow -->
+    <div class="absolute top-1/2 left-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-peach/[0.04] blur-3xl"></div>
   </div>
 
-  <!-- Content -->
-  <div class="relative z-10 max-w-4xl text-center">
-    <div class="animate-reveal mb-6">
-      <span class="inline-block rounded-full border border-ash/30 px-4 py-1.5 font-mono text-xs tracking-widest text-stone uppercase">
+  <div class="relative z-10 max-w-5xl text-center">
+    <!-- Badge -->
+    <div class="gs-reveal mb-8 inline-block">
+      <span class="inline-block rounded-full border border-text-light/30 px-5 py-2 font-mono text-xs tracking-[0.15em] text-text-muted uppercase">
         Software Engineer
       </span>
     </div>
 
-    <h1 class="animate-reveal delay-1 font-display text-6xl leading-[0.95] font-black tracking-tight text-chalk sm:text-7xl md:text-8xl lg:text-9xl">
+    <!-- Name — massive display type like juanmora.co -->
+    <h1 class="gs-reveal font-display text-[clamp(3.5rem,12vw,9rem)] leading-[0.9] font-bold tracking-[-0.04em] text-text">
       Isra<br />
       <span class="text-peach">Huentecura</span>
     </h1>
 
-    <p class="animate-reveal delay-3 mx-auto mt-8 max-w-xl text-lg leading-relaxed text-stone md:text-xl">
-      Building AI-powered compliance platforms<br class="hidden sm:block" />
+    <!-- Tagline -->
+    <p class="gs-reveal mx-auto mt-8 max-w-lg text-lg leading-relaxed text-text-muted md:text-xl">
+      Building AI&#8209;powered compliance platforms
       and intelligent agents.
     </p>
 
-    <div class="animate-reveal delay-5 mt-12 flex items-center justify-center gap-6">
+    <!-- CTAs -->
+    <div class="gs-reveal mt-12 flex flex-wrap items-center justify-center gap-5">
       <a
         href="#work"
-        class="group flex items-center gap-2 rounded-full bg-peach px-6 py-3 font-display text-sm font-bold text-void transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(255,188,149,0.2)]"
+        class="btn-glow group flex items-center gap-2.5 rounded-full bg-text px-7 py-3.5 font-display text-sm font-bold text-warm"
       >
         Ver proyectos
-        <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path d="M5 12h14M12 5l7 7-7 7" />
         </svg>
       </a>
       <a
         href="#contact"
-        class="rounded-full border border-ash/40 px-6 py-3 font-display text-sm font-medium text-chalk transition-all hover:border-peach/40 hover:text-peach"
+        class="rounded-full border border-text/15 px-7 py-3.5 font-display text-sm font-medium text-text transition-all hover:border-peach hover:text-peach"
       >
-        Contacto
+        Hablemos
       </a>
     </div>
   </div>
 
   <!-- Scroll indicator -->
-  <div class="animate-reveal delay-7 absolute bottom-10 left-1/2 -translate-x-1/2">
+  <div class="gs-reveal absolute bottom-10 left-1/2 -translate-x-1/2">
     <div class="flex flex-col items-center gap-2">
-      <span class="font-mono text-[10px] tracking-[0.2em] text-ash uppercase">Scroll</span>
-      <div class="h-8 w-px bg-gradient-to-b from-ash/60 to-transparent"></div>
+      <span class="font-mono text-[10px] tracking-[0.2em] text-text-light uppercase">Scroll</span>
+      <div class="h-8 w-px bg-gradient-to-b from-text-light/50 to-transparent"></div>
     </div>
   </div>
 </section>

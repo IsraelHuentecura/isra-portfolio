@@ -5,66 +5,54 @@ const projects = [
     tag: 'Platform',
     description: 'Plataforma de compliance impulsada por IA con risk engine, ciclo de vida de controles, y agentes inteligentes. Usada por empresas en Chile y Latinoamérica.',
     tech: ['React', 'Hono', 'Cloudflare Workers', 'Zero Sync', 'Drizzle ORM'],
-    accent: 'from-peach/20 to-transparent',
   },
   {
     title: 'SKY Agent',
     tag: 'AI Agent',
-    description: 'Agente autónomo de GRC con 50+ herramientas, context management de 128K tokens, auto-dream memory, y reasoning multi-paso. Human-in-the-loop para mutaciones.',
-    tech: ['AI SDK', 'Durable Objects', 'Tool Registry', 'GSAP Context'],
-    accent: 'from-blue-400/20 to-transparent',
+    description: 'Agente autónomo de GRC con 50+ herramientas, context management de 128K tokens, auto-dream memory, y reasoning multi-paso con human-in-the-loop.',
+    tech: ['AI SDK', 'Durable Objects', 'GSAP', 'Tool Registry'],
   },
   {
     title: 'Risk Engine',
     tag: 'Engine',
-    description: 'Motor de cálculo de riesgo con fórmulas personalizables por organización. Soporta FIAES, Swiss Cheese, IEC ponderado, y estrategias custom con parser de expresiones.',
+    description: 'Motor de cálculo de riesgo con fórmulas personalizables. Soporta FIAES, Swiss Cheese, IEC ponderado, y estrategias custom con parser de expresiones.',
     tech: ['expr-eval', 'Zod', 'Strategy Pattern', 'Formula Parser'],
-    accent: 'from-emerald-400/20 to-transparent',
   },
 ]
 ---
 
-<section id="work" class="relative px-6 py-32 md:py-40">
+<section id="work" class="relative px-6 py-28 md:py-36">
   <div class="mx-auto max-w-6xl">
-    <!-- Section header -->
-    <div class="mb-16 flex items-end justify-between">
-      <div>
-        <span class="mb-3 block font-mono text-xs tracking-[0.2em] text-peach uppercase">Proyectos</span>
-        <h2 class="font-display text-4xl font-bold tracking-tight text-chalk md:text-5xl">
-          Work<span class="text-peach">.</span>
-        </h2>
-      </div>
+    <div class="section-divider mb-20"></div>
+
+    <div class="mb-14">
+      <span class="gs-reveal mb-3 block font-mono text-xs tracking-[0.15em] text-peach uppercase">Proyectos</span>
+      <h2 class="gs-reveal font-display text-[clamp(2.5rem,6vw,4rem)] font-bold tracking-[-0.03em] text-text">
+        Work<span class="text-peach">.</span>
+      </h2>
     </div>
 
-    <!-- Project cards -->
-    <div class="space-y-6">
-      {projects.map((project, i) => (
-        <div
-          class={`card-glow group relative overflow-hidden rounded-2xl border border-ash/15 bg-surface-elevated transition-all delay-${i + 1}`}
-        >
-          <!-- Gradient accent -->
-          <div class={`absolute top-0 right-0 h-full w-1/3 bg-gradient-to-l ${project.accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}></div>
-
-          <div class="relative flex flex-col gap-6 p-8 md:flex-row md:items-start md:p-10">
-            <!-- Left: info -->
+    <div class="gs-stagger space-y-5">
+      {projects.map((project) => (
+        <div class="card-lift group rounded-2xl border border-border bg-surface/60 backdrop-blur-sm transition-all">
+          <div class="flex flex-col gap-6 p-8 md:flex-row md:items-start md:p-10">
             <div class="flex-1">
               <div class="mb-4 flex items-center gap-3">
-                <h3 class="font-display text-2xl font-bold text-chalk md:text-3xl">
+                <h3 class="font-display text-2xl font-bold text-text md:text-3xl">
                   {project.title}
                 </h3>
-                <span class="rounded-full border border-ash/30 px-3 py-0.5 font-mono text-[10px] tracking-widest text-stone uppercase">
+                <span class="rounded-full bg-peach/10 px-3 py-0.5 font-mono text-[10px] tracking-widest text-peach-deep uppercase">
                   {project.tag}
                 </span>
               </div>
-              <p class="max-w-xl text-base leading-relaxed text-stone">
+              <p class="max-w-xl text-base leading-relaxed text-text-muted">
                 {project.description}
               </p>
             </div>
 
-            <!-- Right: tech stack -->
             <div class="flex shrink-0 flex-wrap gap-2 md:max-w-xs md:justify-end">
               {project.tech.map((t) => (
-                <span class="rounded-lg bg-void px-3 py-1.5 font-mono text-[11px] text-ash">
+                <span class="rounded-lg bg-warm-alt px-3 py-1.5 font-mono text-[11px] text-text-muted">
                   {t}
                 </span>
               ))}
