@@ -98,20 +98,13 @@
     let mouseY = 0
     let rafId: number | null = null
 
-    container.addEventListener('mousemove', (e: MouseEvent) => {
+    document.addEventListener('mousemove', (e: MouseEvent) => {
       const rect = container.getBoundingClientRect()
       mouseX = e.clientX - rect.left
       mouseY = e.clientY - rect.top
       if (!rafId) {
         rafId = requestAnimationFrame(updateLetters)
       }
-    })
-
-    container.addEventListener('mouseleave', () => {
-      allLetters.forEach((letter) => {
-        letter.style.transform = 'translate(0, 0) rotate(0deg) scale(1)'
-      })
-      heading.style.transform = 'rotateX(0deg) rotateY(0deg)'
     })
 
     function updateLetters() {
